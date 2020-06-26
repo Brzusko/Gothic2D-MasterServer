@@ -1,4 +1,3 @@
-# WST_zadania_wbrzuszkiewicz
-Zadanie z javy
+# Master server for Gothic 2D game
 
-Output z zadań jest w metodzie main w statycznej klasie Main
+Gothic 2D repo : [Gothic 2D Godot](https://github.com/Brzusko/Gothic2D-Godot)
