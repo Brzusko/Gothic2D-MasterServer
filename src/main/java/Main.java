@@ -16,7 +16,7 @@ public class Main {
     public static GameServer testServer =  new GameServer("127.0.0.1", 7070, "Kolona Gornicza", 20, "Valley");
 
     public static void main(String[] args) {
-        Thread serverHandler = new Thread(new ServerHandler(1000));
+        Thread serverHandler = new Thread(new ServerHandler(15000));
         serverHandler.start();
 
         app.get("/", ctx -> {
@@ -46,7 +46,8 @@ public class Main {
             try {
                 server = gson.fromJson(ctx.body(), GameServer.class);
             } catch(Exception ex) {
-                ctx.result("Something goes wrong with parsing json");
+                RequestResult result = new RequestResult("Something goes wrong with parsing json", 500);
+                ctx.result(result.toJSON());
             } finally {
 
                 if(server != null)
@@ -57,10 +58,11 @@ public class Main {
                         {
                             server = new GameServer(server);
                             servers.put(server.GetInfoForCheck(), server);
-                            ctx.result("Successfully added server to dictionary");
+                            ctx.result(new RequestResult("Successfully added server to dictionary", 200).toJSON());
+
                         }
                         else {
-                            ctx.result("Server with that port and IP already exist");
+                            ctx.result(new RequestResult("Server with that port and IP already exist", 409).toJSON());
                         }
                     }
                 }
@@ -79,8 +81,12 @@ public class Main {
                    server.setPlayers(playersCopy);
                    server.GenerateCounter();
                    Main.servers.put(server.GetInfoForCheck(), server);
+                   ctx.result(new RequestResult("Successfully added server to list", 200).toJSON());
                }
+               else
+                   ctx.result(new RequestResult("Didnt find that server with this ip", 400).toJSON());
            }
+
         });
     }
 }
